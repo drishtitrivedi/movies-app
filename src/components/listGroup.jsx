@@ -12,6 +12,7 @@ const ListGroup = (props) => {
     <ul className="list-group">
       {items.map((item) => (
         <li
+          style={{ cursor: "pointer" }}
           key={item[valueProperty]}
           className={
             selectedGenre === item
@@ -19,7 +20,7 @@ const ListGroup = (props) => {
               : "list-group-item"
           }
         >
-          <a onClick={() => onItemSelect(item)}>{item[textProperty]} </a>
+          <a onClick={() => onItemSelect(item)}>{item[textProperty]}</a>
         </li>
       ))}
     </ul>

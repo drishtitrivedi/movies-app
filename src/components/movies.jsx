@@ -48,6 +48,26 @@ class Movies extends Component {
     this.setState({ sortColumn });
   };
 
+  getPageData = () => {
+    const {
+      movies,
+      pageSize,
+      currentPage,
+      selectedGenre,
+      sortColumn,
+    } = this.state;
+    const filtered =
+      selectedGenre && selectedGenre._id
+        ? movies.filter((m) => m.genre._id === selectedGenre._id)
+        : movies;
+
+    const sorted = _.orderBy(filtered, [sortColumn.path], [sortColumn.order]);
+
+    const movieslist = Paginate(sorted, currentPage, pageSize);
+
+    return { totalCount: filtered.length, data: movieslist };
+  };
+
   render() {
     const {
       movies,
@@ -60,14 +80,15 @@ class Movies extends Component {
       return <p> There are no Movies </p>;
     }
 
-    const filtered =
-      selectedGenre && selectedGenre._id
-        ? movies.filter((m) => m.genre._id === selectedGenre._id)
-        : movies;
+    // const filtered =
+    //   selectedGenre && selectedGenre._id
+    //     ? movies.filter((m) => m.genre._id === selectedGenre._id)
+    //     : movies;
 
-    const sorted = _.orderBy(filtered, [sortColumn.path], [sortColumn.order]);
+    // const sorted = _.orderBy(filtered, [sortColumn.path], [sortColumn.order]);
 
-    const movieslist = Paginate(sorted, currentPage, pageSize);
+    // const movieslist = Paginate(sorted, currentPage, pageSize);
+    const { totalCount, data: movieslist } = this.getPageData();
 
     return (
       <React.Fragment>
@@ -81,9 +102,9 @@ class Movies extends Component {
             />
           </div>
           <div className="col-9">
-            <h4> Showing {filtered.length} movies </h4>
+            <h4> Showing {totalCount} movies </h4>
             <Pagination
-              totalCount={filtered.length}
+              totalCount={totalCount}
               pageSize={pageSize}
               currentPage={currentPage}
               onPageChange={this.handlePageChange}
